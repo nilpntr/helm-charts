@@ -1,0 +1,38 @@
+# Default values for get_notified_feedback.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: sammobach/gin-test
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext:
+  runAsUser: 1000
+
+securityContext: {}
+
+env:
+  PLACEHOLDER: "v0.0.1"
+  PORT: ":54321"
+
+service:
+  type: ClusterIP
+  port: 54321
+
+ingress:
+  enabled: true
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/whitelist-source-range: "0.0.0.0/0"
+  hostname: host.sammobach.dev.transip.us
+  tls: false
+  secretName: nil
+
+resources: {}

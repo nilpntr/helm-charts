@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gin-test.fullname" . }}
+  labels:
+  {{- include "gin-test.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+  {{- include "gin-test.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+    {{- include "gin-test.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+      {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "gin-test.fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          livenessProbe:
+            httpGet:
+              port: {{ .Values.service.port }}
+              path: /heartbeat
+            failureThreshold: 1
+            periodSeconds: 10
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+  {{- toYaml .Values.resources | nindent 12 }}
