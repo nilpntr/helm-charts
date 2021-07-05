@@ -1,26 +1,15 @@
 apiVersion: v1
 entries:
-  gin-test:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2021-07-05T15:40:25.434594+02:00"
-    description: A Helm chart for Kubernetes
-    digest: 07305caccfa32e2f347c1071ab07678c13135b6549b834639b0acbd0f3ff6d45
-    name: gin-test
-    type: application
-    urls:
-    - https://nilpntr.github.io/helm-charts/gin-test-0.1.0.tgz
-    version: 0.1.0
   secretary:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-07-05T15:40:25.434968+02:00"
+    created: "2021-07-05T15:53:10.393246+02:00"
     description: A Helm chart for Kubernetes
-    digest: 62032d9d375d877e83127c107b9da440a5cfb4cb5ae769d5cebecf8cce6ab299
+    digest: 7f98a9953b26dd97de2069f3a6dabd6b2d7894e4a4d5269b0ea65d06d2e51cf7
     icon: https://static.vecteezy.com/system/resources/previews/000/362/480/large_2x/lock-vector-icon.jpg
     name: secretary
     type: application
     urls:
     - https://nilpntr.github.io/helm-charts/secretary-0.1.0.tgz
     version: 0.1.0
-generated: "2021-07-05T15:40:25.434073+02:00"
+generated: "2021-07-05T15:53:10.392608+02:00"
