@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "secretary.fullname" . }}
+data:
+  EXCLUDED_NAMESPACES: "{{ .Values.secretary.excluded_namespaces }}"
+  SYNC_DELAY: "{{ .Values.secretary.sync_delay }}"

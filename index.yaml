@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  secretary:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-07-05T15:20:42.61036+02:00"
+    description: A Helm chart for Kubernetes
+    digest: eecc57d862a877f9c73753182b2d58203b9e001cc71d4fcc9b1ab2f7adb7dd5b
+    icon: https://static.vecteezy.com/system/resources/previews/000/362/480/large_2x/lock-vector-icon.jpg
+    name: secretary
+    type: application
+    urls:
+    - https://nilpntr.github.io/helm-charts/secretary-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-07-05T15:20:42.609793+02:00"
