@@ -3,9 +3,9 @@ entries:
   secretary:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-07-11T16:11:18.134949+02:00"
+    created: "2021-07-11T16:13:29.090552+02:00"
     description: A Helm chart for Kubernetes
-    digest: a8064ccc351a21f71480977bde617790c9a7ce17fc0d78a4178877e461c2d7da
+    digest: 138430a605be12d54a781d9da660bdda292218af0f544e89ce2d3d016fe1cb82
     icon: https://static.vecteezy.com/system/resources/previews/000/362/480/large_2x/lock-vector-icon.jpg
     name: secretary
     type: application
@@ -15,17 +15,17 @@ entries:
   shove:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-07-11T16:11:18.13991+02:00"
+    created: "2021-07-11T16:13:29.095879+02:00"
     dependencies:
     - condition: redis.enabled
       name: redis
       repository: https://charts.bitnami.com/bitnami
       version: 14.6.6
     description: A Helm chart for Kubernetes
-    digest: 4e442f0e1a8760eee116192e7416e876f51013cdb16b03cd947637f9ccb24ccb
+    digest: 30ac996d7eae79e303053330c0d3c652fe34d2d77be0c800e4cc7133e0688282
     name: shove
     type: application
     urls:
     - https://nilpntr.github.io/helm-charts/shove-0.1.0.tgz
     version: 0.1.0
-generated: "2021-07-11T16:11:18.133957+02:00"
+generated: "2021-07-11T16:13:29.089989+02:00"
