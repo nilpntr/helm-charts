@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shove.fullname" . }}
+  labels:
+    {{- include "shove.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "shove.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "shove.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "shove.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - /app/shove
+            {{- if .Values.shove.api.enabled }}
+            - "--api-addr=:{{ .Values.service.port }}"
+            {{- end }}
+            {{- if .Values.redis.enabled }}
+            - "--queue-redis=redis://:{{ .Values.redis.auth.password }}@{{ include "redis.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ if .Values.redis.sentinel.enabled }}{{ .Values.redis.sentinel.service.port }}{{ else }}{{ .Values.redis.master.service.port }}{{ end }}"
+            {{- end }}
+            {{- if .Values.shove.fcm.api_key }}
+            - "--fcm-api-key={{ .Values.shove.fcm.api_key }}"
+            {{- end }}
+            {{- if .Values.shove.apns.certificate }}
+            - "--apns-certificate-path=/opt/shove-mounts/certificate"
+            {{- end }}
+            {{- if .Values.shove.apns.sandbox_certificate }}
+            - "--apns-sandbox-certificate-path=/opt/shove-mounts/sandbox_certificate"
+            {{- end }}
+            - "--apns-workers={{ .Values.shove.apns.workers | default 4 }}"
+            {{- if .Values.shove.email.host }}
+            - "--email-host={{ .Values.shove.email.host }}"
+            {{- end }}
+            {{- if .Values.shove.email.port }}
+            - "--email-port={{ .Values.shove.email.port | default 25 }}"
+            {{- end }}
+            {{- if .Values.shove.email.rate_amount }}
+            - "--email-rate-amount={{ .Values.shove.email.rate_amount }}"
+            {{- end }}
+            {{- if .Values.shove.email.rate_per }}
+            - "--email-rate-per={{ .Values.shove.email.rate_per }}"
+            {{- end }}
+            {{- if and (.Values.shove.email.tls) (eq .Values.shove.email.tls "true") }}
+            - "--email-tls"
+            {{- end }}
+            {{- if and (.Values.shove.email.tls_insecure) (eq .Values.shove.email.tls_insecure "true") }}
+            - "--email-tls-insecure"
+            {{- end }}
+            {{- if .Values.shove.fcm.api_key }}
+            - "--fcm-api-key={{ .Values.shove.fcm.api_key }}"
+            {{- end }}
+            - "--fcm-workers={{ .Values.shove.fcm.workers | default 4 }}"
+            {{- if .Values.shove.telegram.bot_token }}
+            - "--telegram-bot-token={{ .Values.shove.telegram.bot_token }}"
+            {{- end }}
+            {{- if .Values.shove.telegram.rate_amount }}
+            - "--telegram-rate-amount={{ .Values.shove.telegram.rate_amount }}"
+            {{- end }}
+            {{- if .Values.shove.telegram.rate_per }}
+            - "--telegram-rate-per={{ .Values.shove.telegram.rate_per }}"
+            {{- end }}
+            - "--telegram-workers={{ .Values.shove.telegram.workers | default 2 }}"
+            {{- if .Values.shove.webpush.vapid_private_key }}
+            - "--webpush-vapid-private-key={{ .Values.shove.webpush.vapid_private_key }}"
+            {{- end }}
+            {{- if .Values.shove.webpush.vapid_public_key }}
+            - "--webpush-vapid-public-key={{ .Values.shove.webpush.vapid_public_key }}"
+            {{- end }}
+            - "--webpush-workers={{ .Values.shove.webpush.workers | default 8 }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            {{- if or (.Values.shove.apns.certificate) (.Values.shove.apns.sandbox_certificate) }}
+            - mountPath: /opt/shove-mounts
+              name: apns-certificate
+            {{- end }}
+          {{- if .Values.shove.api.enabled }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- if or (.Values.shove.apns.certificate) (.Values.shove.apns.sandbox_certificate) }}
+        - name: apns-certificate
+          secret:
+            secretName: {{ include "shove.fullname" . }}-apns
+            items:
+              {{- if .Values.shove.apns.certificate }}
+              - key: certificate
+                path: /opt/shove-mounts/certificate
+              {{- end }}
+              {{- if .Values.shove.apns.sandbox_certificate }}
+              - key: sandbox_certificate
+                path: /opt/shove-mounts/sandbox_certificate
+              {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

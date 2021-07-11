@@ -1,0 +1,116 @@
+redis:
+  enabled: false
+  architecture: standalone
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+shove:
+  api:
+    enabled: true
+
+  apns:
+    # APNS certificate
+    certificate: ""
+    # APNS sandbox certificate
+    sandbox_certificate: ""
+    # The number of workers pushing APNS messages (default 4)
+    workers: 4
+
+  email:
+    # Email host
+    host: ""
+    # Email port (default 25)
+    port: ""
+    # Email max. rate (amount)
+    rate_amount: ""
+    # Email max. rate (per seconds)
+    rate_per: ""
+    # Use TLS
+    tls: "true"
+    # Skip TLS verification
+    tls_insecure: "false"
+
+  fcm:
+    # FCM API key
+    api_key: ""
+    # The number of workers pushing FCM messages (default 4)
+    workers: 4
+
+  telegram:
+    # Telegram bot token
+    bot_token: ""
+    # Telegram max. rate (amount)
+    rate_amount: ""
+    # Telegram max. rate (per seconds)
+    rate_per: ""
+    # The number of workers pushing Telegram messages (default 2)
+    workers: 2
+
+  webpush:
+    # VAPID private key
+    vapid_private_key: ""
+    # VAPID public key
+    vapid_public_key: ""
+    # The number of workers pushing Web messages (default 8)
+    workers: 8
+
+replicaCount: 1
+
+image:
+  repository: sammobach/shove
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext:
+   runAsNonRoot: true
+   runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8322
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - hostname: shove.example.local
+      paths:
+        - path: /
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 4
+  maxReplicas: 100
+#  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 50
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
