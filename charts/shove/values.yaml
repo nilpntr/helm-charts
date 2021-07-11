@@ -1,3 +1,4 @@
+# Redis is only used if you directly want to push it into the queue without using the api
 redis:
   enabled: false
   architecture: standalone
