@@ -53,6 +53,15 @@ spec:
             {{- if .Values.shove.email.host }}
             - "--email-host={{ .Values.shove.email.host }}"
             {{- end }}
+            {{- if and (.Values.shove.email.plain_auth) (eq .Values.shove.email.plain_auth "true") }}
+            - "--email-plain-auth"
+            {{- end }}
+            {{- if .Values.shove.email.email_username }}
+            - "--email-username={{ .Values.shove.email.email_username }}"
+            {{- end }}
+            {{- if .Values.shove.email.email_password }}
+            - "--email-password={{ .Values.shove.email.email_password }}"
+            {{- end }}
             {{- if .Values.shove.email.port }}
             - "--email-port={{ .Values.shove.email.port | default 25 }}"
             {{- end }}

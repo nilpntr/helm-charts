@@ -32,6 +32,12 @@ shove:
     tls: "true"
     # Skip TLS verification
     tls_insecure: "false"
+    # Use Email plain auth(username and password)
+    plain_auth: "false"
+    # Email username
+    email_username: ""
+    # Email password
+    email_password: ""
 
   fcm:
     # FCM API key
