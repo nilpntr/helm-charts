@@ -1,9 +1,13 @@
 .PHONY: all
-all: lint package index
+all: clean lint package index
 
 .PHONY: lint
 lint:
 	helm lint charts/*
+
+.PHONY: clean
+clean:
+	rm *.tgz || true
 
 .PHONY: package
 package:
